@@ -1,0 +1,22 @@
+{
+  "name": "samplewebapp",
+  "version": "1.0.0",
+  "description": "---\r page_type: sample\r name: \"HTML sample for Azure App Service\"\r description: \"This is a simple HTML/CSS/JS web app that you can deploy to Azure App Service using Git.\"\r languages:\r - javascript\r - html\r products:\r - azure\r - azure-app-service\r ---",
+  "main": "ie-emulation-modes-warning.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kryalama/app-service-web-html-get-started.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kryalama/app-service-web-html-get-started/issues"
+  },
+  "homepage": "https://github.com/kryalama/app-service-web-html-get-started#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

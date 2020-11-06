@@ -1,7 +1,7 @@
 ---
 page_type: sample
-name: "HTML sample for Azure App Service"
-description: "This is a simple HTML/CSS/JS web app that you can deploy to Azure App Service using Git."
+name: "Sample Web App with Application Insights Click Analytics Plugin Enabled"
+description: "This is a simple HTML/CSS/JS web app that illustrates how to enable Application Insights Click Analytics Plugin"
 languages:
 - javascript
 - html
@@ -10,14 +10,22 @@ products:
 - azure-app-service
 ---
 
-# HTML sample for Azure App Service
+# Application Insights with Click Analytics Plugin - HTML sample
 
-This is a simple HTML/CSS/JS web app that can be deployed to Azure App Service using Git. 
+This is a simple HTML/CSS/JS web app that illustrates how to enable Application Insights Click Analytics Plugin
 
 It is built on the [Carousel template](http://getbootstrap.com/examples/carousel) by [Bootstrap](http://getbootstrap.com).
 
-To learn how to deploy this starter web app to App Service in a few minutes, go to [Deploy your first web app to Azure in 5 minutes](https://azure.microsoft.com/documentation/articles/app-service-web-get-started).
+# Get Started
 
-## License
+1.  Create an Application Insights resource in Azure by following [these instructions](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-javascript?toc=/azure/azure-monitor/toc.json).
 
-See [LICENSE](LICENSE).
+2.  Grab the Instrumentation Key (aka "ikey") from the resource you created in step 1. Later, you'll add it to the instrumentationKey setting in the `public/js/appinsightsConfig.js` file
+
+3.  In the project directory you can run `npm install` to install dependencies.
+
+4.  To launch the app locally , simply run
+
+    `node index.js`
+
+
