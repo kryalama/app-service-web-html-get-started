@@ -1,16 +1,16 @@
 ---
 page_type: sample
 name: "Sample Web App with Application Insights Click Analytics Plugin Enabled"
-description: "This is a simple HTML/CSS/JS web app that illustrates how to enable Application Insights Click Analytics Plugin"
+description: "This is a simple HTML/CSS/JS web app that illustrates how to enable Application Insights JS- Click Analytics Plugin"
 languages:
 - javascript
 - html
 products:
 - azure
-- azure-app-service
+- Application Insights JS
 ---
 
-# Application Insights with Click Analytics Plugin - HTML sample
+# Application Insights JS with Click Analytics Plugin - HTML sample
 
 This is a simple HTML/CSS/JS web app that illustrates how to enable Application Insights Click Analytics Plugin
 
