@@ -4193,20 +4193,20 @@
     var DEFAULT_DONOT_TRACK_TAG = 'ai-dnt';
     var DEFAULT_AI_BLOB_ATTRIBUTE_TAG = 'ai-blob';
     var DEFAULT_DATA_PREFIX = 'data-';
-    var _ExtendedInternalMessageId = __assign({}, _InternalMessageId, { CannotParseAiBlobValue: 506, InvalidContentBlob: 515 });
+    var _ExtendedInternalMessageId = __assign({}, _InternalMessageId, { CannotParseAiBlobValue: 101, InvalidContentBlob: 102, TrackPageActionEventFailed: 103 });
     /**
      * Finds attributes in overrideConfig which are invalid or should be objects
      * and deletes them. useful in override config
      * @param overrideConfig - override config object
      * @param attributeNamesExpectedObjects - attributes that should be objects in override config object
      */
-    function _removeNonObjectsAndInvalidElements(overrideConfig, attributeNamesExpectedObjects) {
-        _removeInvalidElements(overrideConfig);
+    function removeNonObjectsAndInvalidElements(overrideConfig, attributeNamesExpectedObjects) {
+        removeInvalidElements(overrideConfig);
         for (var i in attributeNamesExpectedObjects) {
             if (attributeNamesExpectedObjects.hasOwnProperty(i)) {
                 var objectName = attributeNamesExpectedObjects[i];
                 if (typeof overrideConfig[objectName] === 'object') {
-                    _removeInvalidElements(overrideConfig[objectName]);
+                    removeInvalidElements(overrideConfig[objectName]);
                 }
                 else {
                     delete overrideConfig[objectName];
@@ -4219,7 +4219,7 @@
      * and deletes them. useful in override config
      * @param object Input object
      */
-    function _removeInvalidElements(object) {
+    function removeInvalidElements(object) {
         /// Because the config object 'callback' contains only functions, 
         /// when it is stringified it returns the empty object. This explains
         /// the workaround regarding 'callback'
@@ -4246,7 +4246,7 @@
      * @param evt - Mouse event
      * @returns true if the event is a right click
      */
-    function _isRightClick(evt) {
+    function isRightClick(evt) {
         if ('which' in evt) {
             return (evt.which === 3);
         }
@@ -4259,7 +4259,7 @@
      * @param evt - Mouse event
      * @returns true if the event is a left click
      */
-    function _isLeftClick(evt) {
+    function isLeftClick(evt) {
         if ('which' in evt) {
             return (evt.which === 1);
         }
@@ -4272,7 +4272,7 @@
      * @param evt - Mouse event
      * @returns true if the event is a middle click
      */
-    function _isMiddleClick(evt) {
+    function isMiddleClick(evt) {
         if ('which' in evt) {
             return (evt.which === 2);
         }
@@ -4285,7 +4285,7 @@
      * @param evt - Keyboard event
      * @returns true if the event is a keyboard enter
      */
-    function _isKeyboardEnter(evt) {
+    function isKeyboardEnter(evt) {
         if ('keyCode' in evt) {
             return (evt.keyCode === 13);
         }
@@ -4295,7 +4295,7 @@
      * @param evt - Keyboard event
      * @returns true if the event is a space enter
      */
-    function _isKeyboardSpace(evt) {
+    function isKeyboardSpace(evt) {
         if ('keyCode' in evt) {
             return (evt.keyCode === 32);
         }
@@ -4306,8 +4306,8 @@
      * @param doNotTrackFieldName - DOM element
      * @returns true if the element must not be tarcked
      */
-    function _isElementDnt(element, doNotTrackFieldName) {
-        var dntElement = _findClosestByAttribute(element, doNotTrackFieldName);
+    function isElementDnt(element, doNotTrackFieldName) {
+        var dntElement = findClosestByAttribute(element, doNotTrackFieldName);
         if (!isValueAssigned(dntElement)) {
             return false;
         }
@@ -4319,8 +4319,8 @@
      * @param attribute - Attribute name
      * @returns Dom element which contains attribute
      */
-    function _findClosestByAttribute(el, attribute) {
-        return _walkUpDomChainWithElementValidation(el, _isAttributeInElement, attribute);
+    function findClosestByAttribute(el, attribute) {
+        return walkUpDomChainWithElementValidation(el, isAttributeInElement, attribute);
     }
     /**
      * checks if attribute is in element.
@@ -4329,9 +4329,9 @@
      * @param attributeToLookFor - Attribute name
      * @returns true if attribute is in element, even if empty string
      */
-    function _isAttributeInElement(element, attributeToLookFor) {
+    function isAttributeInElement(element, attributeToLookFor) {
         var value = element.getAttribute(attributeToLookFor);
-        return isValueAssigned(value) || value === '';
+        return isValueAssigned(value);
     }
     /**
      * Walks up DOM tree to find element which matches validationMethod
@@ -4340,7 +4340,7 @@
      * @param validationMethodParam - DOM element validation method parameters
      * @returns Dom element which is an anchor
      */
-    function _walkUpDomChainWithElementValidation(el, validationMethod, validationMethodParam) {
+    function walkUpDomChainWithElementValidation(el, validationMethod, validationMethodParam) {
         var element = el;
         if (element) {
             while (!validationMethod(element, validationMethodParam)) {
@@ -4357,7 +4357,7 @@
      * @param element - DOM element
      * @returns Is element an anchor
      */
-    function _isElementAnAnchor(element) {
+    function isElementAnAnchor(element) {
         return element.nodeName === 'A';
     }
     /**
@@ -4365,11 +4365,11 @@
      * @param element - DOM element
      * @returns Dom element which is an anchor
      */
-    function _findClosestAnchor(element) {
+    function findClosestAnchor(element) {
         /// <summary> Walks up DOM tree to find anchor element </summary>
         /// <param type='object'> DOM element </param>
         /// <returns> Dom element which is an anchor</returns>
-        return _walkUpDomChainWithElementValidation(element, _isElementAnAnchor);
+        return walkUpDomChainWithElementValidation(element, isElementAnAnchor);
     }
     /**
      * Returns the specified field and also removes the property from the object if exists.
@@ -4377,7 +4377,7 @@
      * @param fieldName - >Name of the field/property to be extracted
      * @returns Value of the specified tag
      */
-    function _extractFieldFromObject(obj, fieldName) {
+    function extractFieldFromObject(obj, fieldName) {
         var fieldValue;
         if (obj && obj[fieldName]) {
             fieldValue = obj[fieldName];
@@ -4390,7 +4390,7 @@
      * @param str - Input string
      * @returns String with surrounding brackets
      */
-    function _bracketIt(str) {
+    function bracketIt(str) {
         /// <summary>
         ///  Adds surrounding square brackets to the passed in text
         /// </summary>
@@ -4439,14 +4439,14 @@
         }
         return extended;
     }
-    function _validateContentNamePrefix(config, defaultDataPrefix) {
+    function validateContentNamePrefix(config, defaultDataPrefix) {
         return isValueAssigned(config.dataTags.customDataPrefix) && (config.dataTags.customDataPrefix.indexOf(defaultDataPrefix) === 0);
     }
     /**
      * Merge passed in configuration with default configuration
      * @param overrideConfig
      */
-    function _mergeConfig(overrideConfig) {
+    function mergeConfig(overrideConfig) {
         var defaultConfig = {
             // General library settings
             autoCapture: true,
@@ -4467,7 +4467,9 @@
                 customDataPrefix: DEFAULT_DATA_PREFIX,
                 captureAllMetaDataContent: false,
                 donotTrackDataTag: DEFAULT_DONOT_TRACK_TAG
-            }
+            },
+            behaviorValidator: function (key) { return key || ""; },
+            defaultRightClickBhvr: ""
         };
         var attributesThatAreObjectsInConfig = [];
         for (var attribute in defaultConfig) {
@@ -4478,12 +4480,30 @@
         if (overrideConfig) {
             // delete attributes that should be object and 
             // delete properties that are null, undefined, ''
-            _removeNonObjectsAndInvalidElements(overrideConfig, attributesThatAreObjectsInConfig);
+            removeNonObjectsAndInvalidElements(overrideConfig, attributesThatAreObjectsInConfig);
             if (isValueAssigned(overrideConfig.dataTags)) {
-                overrideConfig.dataTags.customDataPrefix = _validateContentNamePrefix(overrideConfig, DEFAULT_DATA_PREFIX) ? overrideConfig.dataTags.customDataPrefix : DEFAULT_DATA_PREFIX;
+                overrideConfig.dataTags.customDataPrefix = validateContentNamePrefix(overrideConfig, DEFAULT_DATA_PREFIX) ? overrideConfig.dataTags.customDataPrefix : DEFAULT_DATA_PREFIX;
             }
             return extend(true, defaultConfig, overrideConfig);
         }
+    }
+    function BehaviorMapValidator(map) {
+        return function (key) { return map[key] || ""; };
+    }
+    function BehaviorValueValidator(behaviorArray) {
+        return function (key) {
+            var result;
+            CoreUtils.arrForEach(behaviorArray, function (value) {
+                if (value === key) {
+                    result = value;
+                    return -1;
+                }
+            });
+            return result || "";
+        };
+    }
+    function BehaviorEnumValidator(enumObj) {
+        return function (key) { return enumObj[key] || ""; };
     }
 
     /*!
@@ -4496,16 +4516,17 @@
      * @param element - An html image element
      * @returns Href value.
      */
-    function _getImageHref(element) {
+    function getImageHref(element) {
         var temp = element;
         if (temp) {
-            var parent = _findClosestAnchor(temp);
+            var parent = findClosestAnchor(temp);
             if (parent.length === 1) {
-                if (parent[0].href) {
-                    return parent[0].href;
+                var firstParent = parent[0];
+                if (firstParent.href) {
+                    return firstParent.href;
                 }
-                else if (parent[0].src) {
-                    return (parent[0].src);
+                else if (firstParent.src) {
+                    return (firstParent.src);
                 }
             }
         }
@@ -4515,7 +4536,7 @@
      * Get click target
      * @returns Click target URI
      */
-    function _getClickTarget(element) {
+    function getClickTarget(element) {
         var clickTarget = '';
         switch (element.tagName) {
             case 'A':
@@ -4523,7 +4544,7 @@
                 clickTarget = element.href || '';
                 break;
             case 'IMG':
-                clickTarget = _getImageHref(element);
+                clickTarget = getImageHref(element);
                 break;
             case 'INPUT':
                 var type = element.type;
@@ -4547,14 +4568,14 @@
      * @param config - configuration object
      * @returns Page name.
      */
-    function _getPageName(config, overrideValues) {
+    function getPageName(config, overrideValues) {
         /// <summary>
         ///  Gets the pageName from the DOM or by calling a override if set.
         /// </summary>
         if (overrideValues && overrideValues.pageName) {
             return overrideValues.pageName;
         }
-        else if (config.callback && typeof (config.callback.pageName) === 'function') {
+        else if (config.callback && CoreUtils.isFunction(config.callback.pageName)) {
             return config.callback.pageName();
         }
         else if (config.coreData && config.coreData.pageName) {
@@ -4579,7 +4600,7 @@
      * @param location - window.location or document.location
      * @returns Flag indicating if an element is market PII.
      */
-    function _sanitizeUrl(config, location) {
+    function sanitizeUrl(config, location) {
         if (!location) {
             return null;
         }
@@ -4609,166 +4630,12 @@
      * @param location - window.location or document.location
      * @returns Flag indicating if an element is market PII.
      */
-    function _getUri(config, location) {
+    function getUri(config, location) {
         if (config.coreData && config.coreData.requestUri && config.coreData.requestUri !== '') {
             return config.coreData.requestUri;
         }
-        return _sanitizeUrl(config, location);
+        return sanitizeUrl(config, location);
     }
-
-    /*!
-     * Application Insights JavaScript SDK - Click Analytics, 2.5.9
-     * Copyright (c) Microsoft and contributors. All rights reserved.
-     */
-    /**
-     *  @copyright Microsoft 2020
-     */
-    // Behavior enum values
-    var Behavior;
-    (function (Behavior) {
-        Behavior[Behavior["UNDEFINED"] = 0] = "UNDEFINED";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Page Experience [1-19]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["NAVIGATIONBACK"] = 1] = "NAVIGATIONBACK";
-        Behavior[Behavior["NAVIGATION"] = 2] = "NAVIGATION";
-        Behavior[Behavior["NAVIGATIONFORWARD"] = 3] = "NAVIGATIONFORWARD";
-        Behavior[Behavior["APPLY"] = 4] = "APPLY";
-        Behavior[Behavior["REMOVE"] = 5] = "REMOVE";
-        Behavior[Behavior["SORT"] = 6] = "SORT";
-        Behavior[Behavior["EXPAND"] = 7] = "EXPAND";
-        Behavior[Behavior["REDUCE"] = 8] = "REDUCE";
-        Behavior[Behavior["CONTEXTMENU"] = 9] = "CONTEXTMENU";
-        Behavior[Behavior["TAB"] = 10] = "TAB";
-        Behavior[Behavior["COPY"] = 11] = "COPY";
-        Behavior[Behavior["EXPERIMENTATION"] = 12] = "EXPERIMENTATION";
-        Behavior[Behavior["PRINT"] = 13] = "PRINT";
-        Behavior[Behavior["SHOW"] = 14] = "SHOW";
-        Behavior[Behavior["HIDE"] = 15] = "HIDE";
-        Behavior[Behavior["MAXIMIZE"] = 16] = "MAXIMIZE";
-        Behavior[Behavior["MINIMIZE"] = 17] = "MINIMIZE";
-        Behavior[Behavior["BACKBUTTON"] = 18] = "BACKBUTTON";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Scenario Process [20-39]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["STARTPROCESS"] = 20] = "STARTPROCESS";
-        Behavior[Behavior["PROCESSCHECKPOINT"] = 21] = "PROCESSCHECKPOINT";
-        Behavior[Behavior["COMPLETEPROCESS"] = 22] = "COMPLETEPROCESS";
-        Behavior[Behavior["SCENARIOCANCEL"] = 23] = "SCENARIOCANCEL";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Download [40-59]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["DOWNLOADCOMMIT"] = 40] = "DOWNLOADCOMMIT";
-        Behavior[Behavior["DOWNLOAD"] = 41] = "DOWNLOAD";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Search [60-79]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["SEARCHAUTOCOMPLETE"] = 60] = "SEARCHAUTOCOMPLETE";
-        Behavior[Behavior["SEARCH"] = 61] = "SEARCH";
-        Behavior[Behavior["SEARCHINITIATE"] = 62] = "SEARCHINITIATE";
-        Behavior[Behavior["TEXTBOXINPUT"] = 63] = "TEXTBOXINPUT";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Commerce [80-99]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["VIEWCART"] = 82] = "VIEWCART";
-        Behavior[Behavior["ADDWISHLIST"] = 83] = "ADDWISHLIST";
-        Behavior[Behavior["FINDSTORE"] = 84] = "FINDSTORE";
-        Behavior[Behavior["CHECKOUT"] = 85] = "CHECKOUT";
-        Behavior[Behavior["REMOVEFROMCART"] = 86] = "REMOVEFROMCART";
-        Behavior[Behavior["PURCHASECOMPLETE"] = 87] = "PURCHASECOMPLETE";
-        Behavior[Behavior["VIEWCHECKOUTPAGE"] = 88] = "VIEWCHECKOUTPAGE";
-        Behavior[Behavior["VIEWCARTPAGE"] = 89] = "VIEWCARTPAGE";
-        Behavior[Behavior["VIEWPDP"] = 90] = "VIEWPDP";
-        Behavior[Behavior["UPDATEITEMQUANTITY"] = 91] = "UPDATEITEMQUANTITY";
-        Behavior[Behavior["INTENTTOBUY"] = 92] = "INTENTTOBUY";
-        Behavior[Behavior["PUSHTOINSTALL"] = 93] = "PUSHTOINSTALL";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Authentication [100-119]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["SIGNIN"] = 100] = "SIGNIN";
-        Behavior[Behavior["SIGNOUT"] = 101] = "SIGNOUT";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Social [120-139]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["SOCIALSHARE"] = 120] = "SOCIALSHARE";
-        Behavior[Behavior["SOCIALLIKE"] = 121] = "SOCIALLIKE";
-        Behavior[Behavior["SOCIALREPLY"] = 122] = "SOCIALREPLY";
-        Behavior[Behavior["CALL"] = 123] = "CALL";
-        Behavior[Behavior["EMAIL"] = 124] = "EMAIL";
-        Behavior[Behavior["COMMUNITY"] = 125] = "COMMUNITY";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Feedback [140-159]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["VOTE"] = 140] = "VOTE";
-        Behavior[Behavior["SURVEYCHECKPOINT"] = 145] = "SURVEYCHECKPOINT";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Registration, Contact [160-179]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["REGISTRATIONINITIATE"] = 161] = "REGISTRATIONINITIATE";
-        Behavior[Behavior["REGISTRATIONCOMPLETE"] = 162] = "REGISTRATIONCOMPLETE";
-        Behavior[Behavior["CANCELSUBSCRIPTION"] = 163] = "CANCELSUBSCRIPTION";
-        Behavior[Behavior["RENEWSUBSCRIPTION"] = 164] = "RENEWSUBSCRIPTION";
-        Behavior[Behavior["CHANGESUBSCRIPTION"] = 165] = "CHANGESUBSCRIPTION";
-        Behavior[Behavior["REGISTRATIONCHECKPOINT"] = 166] = "REGISTRATIONCHECKPOINT";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Chat [180-199]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["CHATINITIATE"] = 180] = "CHATINITIATE";
-        Behavior[Behavior["CHATEND"] = 181] = "CHATEND";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Trial [200-209]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["TRIALSIGNUP"] = 200] = "TRIALSIGNUP";
-        Behavior[Behavior["TRIALINITIATE"] = 201] = "TRIALINITIATE";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Signup [210-219]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["SIGNUP"] = 210] = "SIGNUP";
-        Behavior[Behavior["FREESIGNUP"] = 211] = "FREESIGNUP";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Referals [220-229]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["PARTNERREFERRAL"] = 220] = "PARTNERREFERRAL";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Intents [230-239]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["LEARNLOWFUNNEL"] = 230] = "LEARNLOWFUNNEL";
-        Behavior[Behavior["LEARNHIGHFUNNEL"] = 231] = "LEARNHIGHFUNNEL";
-        Behavior[Behavior["SHOPPINGINTENT"] = 232] = "SHOPPINGINTENT";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // Video [240-259]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["VIDEOSTART"] = 240] = "VIDEOSTART";
-        Behavior[Behavior["VIDEOPAUSE"] = 241] = "VIDEOPAUSE";
-        Behavior[Behavior["VIDEOCONTINUE"] = 242] = "VIDEOCONTINUE";
-        Behavior[Behavior["VIDEOCHECKPOINT"] = 243] = "VIDEOCHECKPOINT";
-        Behavior[Behavior["VIDEOJUMP"] = 244] = "VIDEOJUMP";
-        Behavior[Behavior["VIDEOCOMPLETE"] = 245] = "VIDEOCOMPLETE";
-        Behavior[Behavior["VIDEOBUFFERING"] = 246] = "VIDEOBUFFERING";
-        Behavior[Behavior["VIDEOERROR"] = 247] = "VIDEOERROR";
-        Behavior[Behavior["VIDEOMUTE"] = 248] = "VIDEOMUTE";
-        Behavior[Behavior["VIDEOUNMUTE"] = 249] = "VIDEOUNMUTE";
-        Behavior[Behavior["VIDEOFULLSCREEN"] = 250] = "VIDEOFULLSCREEN";
-        Behavior[Behavior["VIDEOUNFULLSCREEN"] = 251] = "VIDEOUNFULLSCREEN";
-        Behavior[Behavior["VIDEOREPLAY"] = 252] = "VIDEOREPLAY";
-        Behavior[Behavior["VIDEOPLAYERLOAD"] = 253] = "VIDEOPLAYERLOAD";
-        Behavior[Behavior["VIDEOPLAYERCLICK"] = 254] = "VIDEOPLAYERCLICK";
-        Behavior[Behavior["VIDEOVOLUMECONTROL"] = 255] = "VIDEOVOLUMECONTROL";
-        Behavior[Behavior["VIDEOAUDIOTRACKCONTROL"] = 256] = "VIDEOAUDIOTRACKCONTROL";
-        Behavior[Behavior["VIDEOCLOSEDCAPTIONCONTROL"] = 257] = "VIDEOCLOSEDCAPTIONCONTROL";
-        Behavior[Behavior["VIDEOCLOSEDCAPTIONSTYLE"] = 258] = "VIDEOCLOSEDCAPTIONSTYLE";
-        Behavior[Behavior["VIDEORESOLUTIONCONTROL"] = 259] = "VIDEORESOLUTIONCONTROL";
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // 	Advertisement Engagement [280-299]
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        Behavior[Behavior["ADBUFFERING"] = 283] = "ADBUFFERING";
-        Behavior[Behavior["ADERROR"] = 284] = "ADERROR";
-        Behavior[Behavior["ADSTART"] = 285] = "ADSTART";
-        Behavior[Behavior["ADCOMPLETE"] = 286] = "ADCOMPLETE";
-        Behavior[Behavior["ADSKIP"] = 287] = "ADSKIP";
-        Behavior[Behavior["ADTIMEOUT"] = 288] = "ADTIMEOUT";
-        Behavior[Behavior["OTHER"] = 300] = "OTHER"; // Other
-    })(Behavior || (Behavior = {}));
 
     /*!
      * Application Insights JavaScript SDK - Click Analytics, 2.5.9
@@ -4794,20 +4661,20 @@
             this._pageTags = {};
         }
         // Fill common PartB fields
-        WebEvent.prototype._setBasicProperties = function (event, overrideValues) {
+        WebEvent.prototype.setBasicProperties = function (event, overrideValues) {
             if (!isValueAssigned(event.name)) {
-                event.name = _getPageName(this._config, overrideValues);
+                event.name = getPageName(this._config, overrideValues);
             }
             if (!isValueAssigned(event.uri) && hasWindow) {
-                event.uri = _getUri(this._config, getLocation());
+                event.uri = getUri(this._config, getLocation());
             }
         };
         /**
          * Sets common properties for events that are based on the WebEvent schema.
          * @param event - The event
          */
-        WebEvent.prototype._setCommonProperties = function (event, overrideValues) {
-            this._setBasicProperties(event, overrideValues);
+        WebEvent.prototype.setCommonProperties = function (event, overrideValues) {
+            this.setBasicProperties(event, overrideValues);
             this._setPageTags(event, overrideValues);
             // extract specific meta tags out of the pageTags.metaTags collection.  These will go into assigned first class fields in the event.
             // the rest will go into pageTags.metaTags collection as is.
@@ -4859,20 +4726,7 @@
             return this._getValidBehavior(behavior);
         };
         WebEvent.prototype._getValidBehavior = function (behavior) {
-            if (isValueAssigned(behavior)) {
-                var result = void 0;
-                var value = parseInt(behavior);
-                if (!isNaN(value)) {
-                    result = value;
-                }
-                else {
-                    result = Behavior[behavior];
-                }
-                if (result in Behavior) {
-                    return result;
-                }
-            }
-            return 0; /*UNDEFINED*/
+            return this._config.behaviorValidator(behavior);
         };
         /**
          * Get the specified metadata value from the collection
@@ -4946,26 +4800,26 @@
          * @param customProperties - Custom properties(Part C)
          * @param isRightClick - Flag for mouse right clicks
          */
-        PageAction.prototype.capturePageAction = function (element, overrideValues, customProperties, isRightClick) {
+        PageAction.prototype.capturePageAction = function (element, overrideValues, customProperties, isRightClick$$1) {
             overrideValues = !isValueAssigned(overrideValues) ? {} : overrideValues;
             var pageActionEvent = { name: '' };
             var pageActionProperties = isValueAssigned(customProperties) ? customProperties : {};
-            this._setCommonProperties(pageActionEvent, overrideValues);
+            this.setCommonProperties(pageActionEvent, overrideValues);
             pageActionEvent.behavior = this._getBehavior(overrideValues);
             // element in scope is needed for below properties.  We cannot pass element into the plugin call chain.  
             // process them here.
             var elementContent = {};
-            if (isRightClick) {
+            if (isRightClick$$1) {
                 // Default behavior for righ click
-                pageActionEvent.behavior = 9 /*CONTEXTMENU*/;
+                pageActionEvent.behavior = this._config.defaultRightClickBhvr;
             }
             // Fill PartB
             if (element) {
-                pageActionEvent.targetUri = _getClickTarget(element);
+                pageActionEvent.targetUri = getClickTarget(element);
                 elementContent = this._contentHandler.getElementContent(element); // collect id,cn tags
                 // if the element has a data-*-bhvr attrib defined, use it.
                 if (elementContent.bhvr && !isValueAssigned(overrideValues.behavior)) {
-                    var currentBehavior = _extractFieldFromObject(elementContent, 'bhvr');
+                    var currentBehavior = extractFieldFromObject(elementContent, 'bhvr');
                     pageActionEvent.behavior = this._getValidBehavior(currentBehavior);
                 }
             }
@@ -4975,7 +4829,7 @@
             if (isValueAssigned(overrideValues.clickCoordinateX) && isValueAssigned(overrideValues.clickCoordinateY)) {
                 pageActionEvent.clickCoordinates = overrideValues.clickCoordinateX + 'X' + overrideValues.clickCoordinateY;
             }
-            pageActionEvent.content = _bracketIt(JSON.stringify(extend(elementContent, overrideValues && overrideValues.contentTags ? overrideValues.contentTags : {})));
+            pageActionEvent.content = bracketIt(JSON.stringify(extend(elementContent, overrideValues && overrideValues.contentTags ? overrideValues.contentTags : {})));
             pageActionEvent.timeToAction = this._getTimeToClick();
             pageActionEvent.refUri = isValueAssigned(overrideValues.refUri) ? overrideValues.refUri : this._config.coreData.referrerUri;
             this.trackPageAction(pageActionEvent, pageActionProperties);
@@ -5034,17 +4888,17 @@
             var _this = this;
             var win = getWindow();
             var doc = getDocument();
-            if (win && win.addEventListener) {
+            if (win) {
                 // IE9 onwards addEventListener is available, 'click' event captures mouse click. mousedown works on other browsers
-                var event = (navigator.appVersion.indexOf('MSIE') !== -1) ? 'click' : 'mousedown';
-                win.addEventListener(event, function (evt) { _this._processClick(evt); }, false);
-                win.addEventListener('keyup', function (evt) { _this._processClick(evt); }, false);
+                var event_1 = (navigator.appVersion.indexOf('MSIE') !== -1) ? 'click' : 'mousedown';
+                EventHelper.Attach(win, event_1, function (evt) { _this._processClick(evt); });
+                EventHelper.Attach(win, 'keyup', function (evt) { _this._processClick(evt); });
             }
-            else if (doc && doc.attachEvent) {
+            else if (doc) {
                 // IE8 and below doesn't have addEventListener so it will use attachEvent
                 // attaching to window does not work in IE8
-                doc.attachEvent('onclick', function (evt) { _this._processClick(evt); });
-                doc.attachEvent('keyup', function (evt) { _this._processClick(evt); });
+                EventHelper.Attach(doc, 'onclick', function (evt) { _this._processClick(evt); });
+                EventHelper.Attach(doc, 'keyup', function (evt) { _this._processClick(evt); });
             }
         };
         /**
@@ -5054,59 +4908,64 @@
          * @param customProperties - Custom properties(Part C)
          * @param isRightClick - Flag for mouse right clicks
          */
-        AutoCaptureHandler.prototype.capturePageAction = function (element, overrideValues, customProperties, isRightClick) {
+        AutoCaptureHandler.prototype.capturePageAction = function (element, overrideValues, customProperties, isRightClick$$1) {
             var donotTrackTag = this._config.dataTags.customDataPrefix + this._config.dataTags.donotTrackDataTag;
-            if (!_isElementDnt(element, donotTrackTag)) {
-                this._pageAction.capturePageAction(element, overrideValues, customProperties, isRightClick);
+            if (!isElementDnt(element, donotTrackTag)) {
+                this._pageAction.capturePageAction(element, overrideValues, customProperties, isRightClick$$1);
             }
         };
         // Process click event
         AutoCaptureHandler.prototype._processClick = function (clickEvent) {
             var clickCaptureElements = { A: true, BUTTON: true, AREA: true, INPUT: true };
             var win = getWindow();
-            clickEvent = clickEvent || win.event; // IE 8 does not pass the event
-            var element = clickEvent.srcElement || clickEvent.target;
-            // populate overrideValues 
-            var overrideValues = {
-                clickCoordinateX: clickEvent.pageX,
-                clickCoordinateY: clickEvent.pageY
-            };
-            var isRightClick = _isRightClick(clickEvent);
-            if (isRightClick) {
-                overrideValues.actionType = ActionType.CLICKRIGHT;
+            if (CoreUtils.isNullOrUndefined(clickEvent) && win) {
+                clickEvent = win.event; // IE 8 does not pass the event
             }
-            else if (_isLeftClick(clickEvent)) {
-                overrideValues.actionType = ActionType.CLICKLEFT;
-            }
-            else if (_isKeyboardEnter(clickEvent)) {
-                overrideValues.actionType = ActionType.KEYBOARDENTER;
-            }
-            else if (_isKeyboardSpace(clickEvent)) {
-                overrideValues.actionType = ActionType.KEYBOARDSPACE;
-            }
-            else if (_isMiddleClick(clickEvent)) {
-                overrideValues.actionType = ActionType.CLICKMIDDLE;
-            }
-            else {
-                return;
-            }
-            while (element && element.tagName) {
-                // control property will be available for <label> elements with 'for' attribute, only use it when is a 
-                // valid JSLL capture element to avoid infinite loops
-                if (element.control && clickCaptureElements[element.control.tagName.toUpperCase()]) {
-                    element = element.control;
+            if (clickEvent) {
+                var element = clickEvent.srcElement || clickEvent.target;
+                // populate overrideValues 
+                var overrideValues = {
+                    clickCoordinateX: clickEvent.pageX,
+                    clickCoordinateY: clickEvent.pageY
+                };
+                var isRightClickObj = isRightClick(clickEvent);
+                if (isRightClickObj) {
+                    overrideValues.actionType = ActionType.CLICKRIGHT;
                 }
-                if (!clickCaptureElements[element.tagName.toUpperCase()]) {
-                    element = element.parentElement || element.parentNode;
-                    continue;
+                else if (isLeftClick(clickEvent)) {
+                    overrideValues.actionType = ActionType.CLICKLEFT;
+                }
+                else if (isKeyboardEnter(clickEvent)) {
+                    overrideValues.actionType = ActionType.KEYBOARDENTER;
+                }
+                else if (isKeyboardSpace(clickEvent)) {
+                    overrideValues.actionType = ActionType.KEYBOARDSPACE;
+                }
+                else if (isMiddleClick(clickEvent)) {
+                    overrideValues.actionType = ActionType.CLICKMIDDLE;
                 }
                 else {
-                    // Check allowed INPUT types
-                    var sendEvent = element.tagName.toUpperCase() === 'INPUT' ? clickCaptureInputTypes$1[element.type.toUpperCase()] : true;
-                    if (sendEvent) {
-                        this.capturePageAction(element, overrideValues, {}, isRightClick);
+                    return;
+                }
+                while (element && element.tagName) {
+                    // control property will be available for <label> elements with 'for' attribute, only use it when is a 
+                    // valid JSLL capture element to avoid infinite loops
+                    if (element.control && clickCaptureElements[element.control.tagName.toUpperCase()]) {
+                        element = element.control;
                     }
-                    break;
+                    var tagNameUpperCased = element.tagName.toUpperCase();
+                    if (!clickCaptureElements[tagNameUpperCased]) {
+                        element = element.parentElement || element.parentNode;
+                        continue;
+                    }
+                    else {
+                        // Check allowed INPUT types
+                        var sendEvent = tagNameUpperCased === 'INPUT' ? clickCaptureInputTypes$1[element.type.toUpperCase()] : true;
+                        if (sendEvent) {
+                            this.capturePageAction(element, overrideValues, {}, isRightClickObj);
+                        }
+                        break;
+                    }
                 }
             }
         };
@@ -5162,7 +5021,7 @@
             }
             if (!this._isTracked(element, dataTagPrefix, aiBlobAttributeTag)) {
                 // capture blob from element or hierarchy
-                biBlobElement = _findClosestByAttribute(element, aiBlobAttributeTag);
+                biBlobElement = findClosestByAttribute(element, aiBlobAttributeTag);
                 if (biBlobElement) {
                     biBlobValue = biBlobElement.getAttribute(aiBlobAttributeTag);
                 }
@@ -5176,7 +5035,7 @@
                 }
                 else {
                     // traverse up the DOM to find the closest parent with data-* tag defined
-                    contentElement = _walkUpDomChainWithElementValidation(element, this._isTracked, dataTagPrefix);
+                    contentElement = walkUpDomChainWithElementValidation(element, this._isTracked, dataTagPrefix);
                     elementContent = extend(elementContent, this._populateElementContentwithDataTag(contentElement, element, dataTagPrefix, parentDataTagPrefix));
                 }
             }
@@ -5184,7 +5043,7 @@
                 contentElement = element;
                 elementContent = extend(elementContent, this._populateElementContentwithDataTag(contentElement, element, dataTagPrefix, parentDataTagPrefix));
             }
-            _removeInvalidElements(elementContent);
+            removeInvalidElements(elementContent);
             return elementContent;
         };
         /**
@@ -5319,11 +5178,12 @@
             var attrs = element.attributes;
             var dataTagFound = false;
             for (var i = 0; i < attrs.length; i++) {
-                if (attrs[i].name === aiBlobAttributeTag) {
+                var attributeName = attrs[i].name;
+                if (attributeName === aiBlobAttributeTag) {
                     // ignore if the attribute name is equal to aiBlobAttributeTag
                     return false;
                 }
-                else if (attrs[i].name.indexOf(dataTag) === 0) {
+                else if (attributeName.indexOf(dataTag) === 0) {
                     dataTagFound = true;
                 }
             }
@@ -5342,7 +5202,6 @@
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.identifier = 'ClickAnalyticsPlugin';
             _this.priority = 181;
-            _this.version = '#version#';
             return _this;
         }
         ClickAnalyticsPlugin.prototype.initialize = function (config, core, extensions, pluginChain) {
@@ -5351,7 +5210,7 @@
             }
             config.extensionConfig = config.extensionConfig || [];
             config.extensionConfig[this.identifier] = config.extensionConfig[this.identifier] || {};
-            this._config = _mergeConfig(config.extensionConfig[this.identifier]);
+            this._config = mergeConfig(config.extensionConfig[this.identifier]);
             _super.prototype.initialize.call(this, config, core, extensions, pluginChain);
             // Default to DOM content handler
             this._contentHandler = this._contentHandler ? this._contentHandler : new DomContentHandler(this._config, this.diagLog());
@@ -5376,7 +5235,7 @@
                 this.pageAction.trackPageAction(pageAction, customProperties);
             }
             catch (e) {
-                this.diagLog().throwInternal(LoggingSeverity.CRITICAL, _InternalMessageId.TrackEventFailed, "trackPageAction failed, page action event will not be collected: " + Util.getExceptionName(e), { exception: Util.dump(e) });
+                this.diagLog().throwInternal(LoggingSeverity.CRITICAL, _ExtendedInternalMessageId.TrackPageActionEventFailed, "trackPageAction failed, page action event will not be collected: " + Util.getExceptionName(e), { exception: Util.dump(e) });
             }
         };
         return ClickAnalyticsPlugin;
@@ -5388,6 +5247,9 @@
      */
 
     exports.ClickAnalyticsPlugin = ClickAnalyticsPlugin;
+    exports.BehaviorMapValidator = BehaviorMapValidator;
+    exports.BehaviorValueValidator = BehaviorValueValidator;
+    exports.BehaviorEnumValidator = BehaviorEnumValidator;
 
     (function(obj, prop, descriptor) { /* ai_es3_polyfil defineProperty */ var func = Object["defineProperty"]; if (func) { try { return func(obj, prop, descriptor); } catch(e) { /* IE8 defines defineProperty, but will throw */ } } if (descriptor && typeof descriptor.value !== undefined) { obj[prop] = descriptor.value; } return obj; })(exports, '__esModule', { value: true });
 
