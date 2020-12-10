@@ -16,16 +16,25 @@ This is a simple HTML/CSS/JS web app that illustrates how to enable Application 
 
 It is built on the [Carousel template](http://getbootstrap.com/examples/carousel) by [Bootstrap](http://getbootstrap.com).
 
-# Get Started
+## Pre-requisites 
+
+1. [Git](https://docs.microsoft.com/en-us/azure/devops/learn/git/install-and-set-up-git) and [Node.js](https://docs.microsoft.com/en-us/windows/nodejs/setup-on-windows) installed on your computer.
+2. Familiarity with editing text and code files in any text editor.
+
+## Get Started
 
 1.  Create an Application Insights resource in Azure by following [these instructions](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-javascript?toc=/azure/azure-monitor/toc.json).
 
-2.  Grab the Instrumentation Key (aka "ikey") from the resource you created in step 1. Later, you'll add it to the instrumentationKey setting in the `public/js/appinsightsConfig.js` file
+2.  Open terminal and clone the repo using `git clone` 
 
-3.  In the project directory you can run `npm install` to install dependencies.
+3.  Grab the Instrumentation Key (aka "ikey") from the resource you created in step 1. Later, you'll add it to the instrumentationKey setting in the `public/ts/appinsights.ts` file
 
-4.  To launch the app locally , simply run
+4.  In the project directory you should run `npm install` on your terminal to install all the dependencies.
+
+5.  After making the changes in step-3, please run `npm run build` on your terminal to transpile and browserify the `appinsights.ts` file
+
+6.  To launch the app locally , simply run the following command on your terminal
 
     `node index.js`
 
-
+7. 	Open your favorite browser and go to http://localhost:8000/

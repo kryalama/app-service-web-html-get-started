@@ -1,6 +1,7 @@
-var clickPlugin = Microsoft.ApplicationInsights.ClickAnalyticsPlugin;
-var clickPluginInstance = new clickPlugin();
-var behaviorMap = {
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { ClickAnalyticsPlugin, BehaviorMapValidator } from '@microsoft/applicationinsights-clickanalytics-js';
+
+const behaviorMap = {
     NAVIGATIONBACK : 1,          // Advancing to the previous index position within a webpage
     NAVIGATION : 2,              // Advancing to a specific index position within a webpage
     NAVIGATIONFORWARD : 3,       // Advancing to the next index position within a webpage
@@ -91,25 +92,27 @@ var behaviorMap = {
     VIDEORESOLUTIONCONTROL : 259,     //  Click to change resolution
 };
 
-// Application Insights Configuration
-var configObj = {
+const clickPluginInstance = new ClickAnalyticsPlugin();
+const clickPluginConfig = {
+    dataTags : {
+        customDataPrefix : 'data-custom-',
+        aiBlobAttributeTag : 'blob',
+        parentDataTag : 'parent',
+        donotTrackDataTag : 'dnt',
+        captureAllMetaDataContent : true
+    },
+    behaviorValidator : BehaviorMapValidator(behaviorMap),
+    defaultRightClickBhvr: 'rc'
+}; 
+const appInsightsConfig = {
     instrumentationKey: "YOUR INSTRUMENTATION KEY",
     extensions: [
       clickPluginInstance
     ],
     extensionConfig: {
-        [clickPluginInstance.identifier] : {
-            dataTags : {
-                customDataPrefix : 'data-custom-',
-                aiBlobAttributeTag : 'blob',
-                parentDataTag : 'parent',
-                donotTrackDataTag : 'dnt',
-                captureAllMetaDataContent : true
-            },
-            behaviorValidator : Microsoft.ApplicationInsights.BehaviorMapValidator(behaviorMap),
-            defaultRightClickBhvr: 'rc'
-        } 
+        [clickPluginInstance.identifier] : clickPluginConfig
     }
-  };
-  var appInsights = new Microsoft.ApplicationInsights.ApplicationInsights({ config: configObj });
-  appInsights.loadAppInsights();
+};
+
+const appInsights = new ApplicationInsights({ config: appInsightsConfig });
+appInsights.loadAppInsights();
